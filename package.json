@@ -1,0 +1,14 @@
+{
+  "name": "quotes-api",
+  "version": "1.0.0",
+  "description": "API that returns random quotes ",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "vex kshitiz",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
