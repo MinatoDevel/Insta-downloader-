@@ -1,15 +1,26 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { ProxyAgent } = require('proxy-agent');
 
 const app = express();
+
+const proxyAgent = new ProxyAgent({
+  proxyList: [
+    'http://proxy1:8080',
+    'http://proxy2:8080',
+    'http://proxy3:8080',
+  ],
+});
 
 app.get('/api/videos/:username', async (req, res) => {
   const username = req.params.username;
   const url = `https://www.instagram.com/${username}/`;
 
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      proxy: proxyAgent,
+    });
     const $ = cheerio.load(response.data);
     const videoUrls = [];
 
