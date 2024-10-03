@@ -1,12 +1,12 @@
 {
-  "name": "quotes-api",
+  "name": "Insta-aoi",
   "version": "1.0.0",
-  "description": "API that returns random quotes ",
+  "description": "API that Sends random video from username ",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "author": "vex kshitiz",
+  "author": "Minato",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2"
