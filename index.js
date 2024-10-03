@@ -1,41 +1,29 @@
-const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { ProxyAgent } = require('proxy-agent');
+import { ApifyClient } from 'apify-client';
 
-const app = express();
+const client = new ApifyClient({
+  token: 'apify_api_hK2Pc8SGUgiFc23VS3HOPyLNYbDbFZ3XYF6r',
+});
 
-const proxyAgent = new ProxyAgent({
-  proxyList: [
-    'http://proxy1:8080',
-    'http://proxy2:8080',
-    'http://proxy3:8080',
+// Prepare Actor input
+const input = {
+  "startUrls": [
+    {
+      "url": "https://www.instagram.com/{username}/"
+    }
   ],
-});
+  "proxy": {
+    "useApifyProxy": true
+  },
+  "maxRequestRetries": 10
+};
 
-app.get('/api/videos/:username', async (req, res) => {
-  const username = req.params.username;
-  const url = `https://www.instagram.com/${username}/`;
+// Run the Actor and wait for it to finish
+const run = await client.actor("pocesar/download-instagram-video").call(input);
 
-  try {
-    const response = await axios.get(url, {
-      proxy: proxyAgent,
-    });
-    const $ = cheerio.load(response.data);
-    const videoUrls = [];
-
-    $('video').each((index, element) => {
-      const videoUrl = $(element).attr('src');
-      videoUrls.push(videoUrl);
-    });
-
-    res.json(videoUrls);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching video URLs' });
-  }
-});
-
-app.listen(3000, () => {
-  console.log('Server listening on port 3000');
+// Fetch and print Actor results from the run's dataset (if there are any)
+console.log('Results from dataset');
+console.log(`Check your data here: https://console.apify.com/storage/datasets/${run.defaultDatasetId}`);
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+items.forEach((item) => {
+  console.dir(item);
 });
